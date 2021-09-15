@@ -100,7 +100,7 @@ df = df2.copy()
 class_col = AUX_CLASS_COL
 ```
 
-## 2 - Text Preprocessing
+## 3 - Text Preprocessing
 
 #### In order to focus on data analisys, our text preprocessing is very simple. First we merely remove stopwords, ponctuations, numbers and change encoding type to NFDK in order to remove possible special ponctuation characteres(such as 'ç').
 
@@ -119,3 +119,35 @@ class_col = AUX_CLASS_COL
     # Removing numeric substrings from text
     text_series = text_series.str.replace(' \d+','')
 ```
+
+## 4 - Basic Word Cloud
+#### Doind the basic text preproccess we can begin our text analysis. In order to compare our results and demonstrate a simpler data analysis, let's plot a word cloud our current text data.
+
+```python
+from wordcloud import WordCloud
+import matplotlib.pyplot as plt
+# Show one word cloud to each Sentiment
+d = {}
+plt.figure(1,figsize=(20, 20))
+n_classes = range(0, len(df[CLASS_COL].value_counts().index))
+for i in n_classes:
+    print("Doing {} graph".format(i))
+    d[i] = df[df[CLASS_COL]==i]
+    words = ' '.join(d[i][TEXT_COL])
+    split_word = " ".join([word for word in words.split()])
+    wordcloud = WordCloud(background_color='black',width=3000,height=2500).generate(split_word)
+    plt.subplot(320+(i+1))
+    plt.imshow(wordcloud)
+    plt.title('Sentiment {}'.format(i))
+    plt.axis('off')
+plt.show()
+```
+
+# Colocar imagem aqui
+
+#### We can view that the words do not represent very well the differences between Positive and Negative Sentiments. It occurs because we get only frequency of words to each Sentiment and plot it, giving importance only to the frequency of words in each class.
+#### To improve it we can find the most relevante features according to each class, analyzing correlation between our features(words) and classes.
+
+## 5 - Chi²
+## 6 - TFIDF
+## 7 - Final Results
