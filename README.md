@@ -145,9 +145,17 @@ plt.show()
 
 # Colocar imagem aqui
 
+Como pode ser visualizado, a nuvem de palavras não corresponde a uma boa representação de cada tipo de review de filme(cada classe diferente).
+Portanto podemos mudar nossa abordagem e em vez de utilizar apenas as palavras de acordo com sua frequencia, podemos utilizar as palavras de acordo com sua relevancia para cada classe específica.
+
 #### We can view that the words do not represent very well the differences between Positive and Negative Sentiments. It occurs because we get only frequency of words to each Sentiment and plot it, giving importance only to the frequency of words in each class.
 #### To improve it we can find the most relevante features according to each class, analyzing correlation between our features(words) and classes.
 
 ## 5 - Chi²
+De forma bem resumida o chi2 analisa a dependencia entre duas features, quanto maior o valor de chi2 maior a dependecia entre as features, desta forma podemos utilizar cada palavra de nosso texto como uma feature distinta e analisar o quão independente elas são de nossa variavel target, obtendo assim a correlação de cada palavra em relação a nossos valores de sentimentos.
+Como o calculo de chi2 é realizado apenas de forma binária, analisando a hipótese da feature ser ou não relacionada àquela vairavel target, precisamos realizar os calculos com classes binárias, portanto faremos 5 variações de classificação uma para cada classe diferente.
+
+
+
 ## 6 - TFIDF
 ## 7 - Final Results
