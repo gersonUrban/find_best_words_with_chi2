@@ -143,7 +143,7 @@ for i in n_classes:
 plt.show()
 ```
 
-# Colocar imagem aqui
+![alt text](https://github.com/gersonUrban/find_best_words_with_chi2/blob/master/images/basicWordCloud.png)
 
 Como pode ser visualizado, a nuvem de palavras não corresponde a uma boa representação de cada tipo de review de filme(cada classe diferente).
 Portanto podemos mudar nossa abordagem e em vez de utilizar apenas as palavras de acordo com sua frequencia, podemos utilizar as palavras de acordo com sua relevancia para cada classe específica.
