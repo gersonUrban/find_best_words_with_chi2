@@ -153,9 +153,30 @@ Portanto podemos mudar nossa abordagem e em vez de utilizar apenas as palavras d
 
 ## 5 - TFIDF
 #### To make possible the Chi² analysis we need transform our text data in a vector of features where each feature is a ngram. When we have a 1gram(n=1), than each feature is a different word.
-#### There are some ways to vectorize our text, we can do a simple bag of words, were we only count how many times each word/feature appear in a document. In this way, we can found statistics of each word in each document and consequently in each class. A better approach is use TFIDF [REF]. TFIDF calculate **Term Frequency** to check 'how many times' word appears, and **Inverse Document Frequency** in order to penalize words that appear in too many documents. In this way is possible to find the importance of each term.
+#### There are some ways to vectorize our text, we can do a simple bag of words, were we only count how many times each word/feature appear in a document. In this way, we can found statistics of each word in each document and consequently in each class. A better approach is use TFIDF [REF]. 
+#### TFIDF calculate **Term Frequency** to check 'how many times' word appears, and **Inverse Document Frequency** in order to penalize words that appear in too many documents. In this way is possible to find the importance of each term.
 
 #### To summarize we will only apply this technique, if you want to delve in this topic you can read the references.
+
+#### Because TFIDF calculates the most important features to a corpus, we will calculate it 2 times, one for each Sentiment variation, in order to get the statistical difference words in those Classes.
+
+#### Than we create a DataFrame only with desired Sentiment Reviews, create a TFIDF weights model and transform all data with these weights. Finally getting the vectors, containg weights and the feature_names containing all ngrams(words) of our vector.
+```python
+    import numpy as np
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    # Getting text only from wanted class
+    df_aux = df[df[CLASS_COL] == CLASS_VALUE]
+    # Getting tfidf model
+    # Create tfidf vectorizer object
+    vectorizer = TfidfVectorizer(ngram_range=ngram)
+    # Fitting tfidf weights to text
+    vec = vectorizer.fit(df_aux[TEXT_COL])
+    # Transforming all data using tfdif model
+    vectors = vec.transform(df[TEXT_COL])
+    # Getting feature names (words)
+    feature_names = vec.get_feature_names()
+```
+#### Now we have each word weight to each sentence in our corpus, and than we can find the Chi², using this values and comparing with our targets.
 
 ## 6 - Chi²
 #### Resuming Chi² analyze the dependency between two features, the higher value, the higher dependency[REF]. In this way we can use each word of our corpus as a distinct feature and verify how diferent it are from our target. thus obtaining the correlation of each word in relation to our Sentiment values.
