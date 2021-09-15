@@ -12,11 +12,12 @@ Portanto, se quisermos fazer uma análise de quais palavras tem maior importanci
 
 ### So we will discuss some points related to this problematic and later a posible solution to this case, in this way we will talk about:
  1 - DataBase used in this case
- 2 - PreProccess DataBase
- 3 - Basic Word Cloud
- 4 - Chi²
- 5 - TFIDF
- 6 - Final Results
+ 2 - DataBase Preprocessing
+ 3 - Text Preprocessing
+ 4 - Basic Word Cloud
+ 5 - Chi²
+ 6 - TFIDF
+ 7 - Final Results
  
 Contudo discutiremos alguns pontos para introduzir e levantar a problemática e posteriormente uma possivel solução para o caso, desta forma falaremos sobre:
 1 - Base de dados
@@ -26,8 +27,6 @@ Contudo discutiremos alguns pontos para introduzir e levantar a problemática e 
 5 - TFIDF
 6 - analise dos dados
 7 - nuvem de palavras final
-
-
 
 
 
@@ -54,3 +53,69 @@ Esta base contém 3 colunas principais, sendo a SentenceId, que indica a qual re
 
 
 
+## 2 - DataBase Preprocessing
+#### We separate our preprocessing in two steps, in very first we need change our Data structure to our applicationand analysis.
+#### After read data, we decide remove all intermediate Sentiments in order to improve the separability between **Negative** and **Positive** Sentiments, and in facilitate viewing of the most signficant words.
+
+```python
+import pandas as pd
+import numpy as np
+########## Initing Constants and Variables ##########
+TEXT_COL = 'Phrase'
+AUX_CLASS_COL = 'new_sent'
+class_col = 'Sentiment'
+########## Reading Data ##########
+df = pd.read_csv('sentiment-analysis-on-movie-reviews/train.tsv',sep='\t')
+# Removing 'neutral' Analysis to improve separability in Negative and Positive Class
+df = df[df[class_col] != 2]
+df = df[df[class_col] != 1]
+df = df[df[class_col] != 3]
+```
+
+#### After that we group all Phrases by SentenceId, joining all Phrases from a reviewer. We do that because there are a lot of short Phrases, with less than 100 characters.
+```python
+# Grouping by SentenceId and transforming data as a list
+df2 = df.groupby('SentenceId').agg(lambda x: x.tolist())
+# Getting review sentiment mean 
+df2['sent_mean'] = df2[class_col].apply(lambda x: np.array(x).mean())
+```
+
+#### Posterioly we get the mean of each review and create a new classification column, with 1 if sentmente mean was > 2 and 0 otherwise.
+```python
+# Transform sentiment values to only positive and negative values
+# Setting all instaces as negative (0)
+df2[AUX_CLASS_COL] = 0 
+# Setting only most than 2 class as 1 (positive)
+df2.loc[df2['sent_mean'] > 2,AUX_CLASS_COL] = 1
+```
+#### Finaly we join all Phrases, reset index and change our class name variable.
+```python
+# Join text from the text list created in groupby agg
+df2[TEXT_COL] = df2[TEXT_COL].apply(lambda x: ' '.join(x))
+# Reset index
+df2.reset_index(drop=True, inplace=True)
+# Redefining df DataFrame
+df = df2.copy()
+# Changing class_col name
+class_col = AUX_CLASS_COL
+```
+
+## 2 - Text Preprocessing
+
+#### In order to focus on data analisys, our text preprocessing is very simple. First we merely remove stopwords, ponctuations, numbers and change encoding type to NFDK in order to remove possible special ponctuation characteres(such as 'ç').
+
+```python
+    # Passing text to lowercase
+    text_series = text_series.str.lower()
+    # Defining stopwords to be removed
+    pat = r'\b(?:{})\b'.format('|'.join(stopwords.words(language)))
+    # removing stopwords
+    text_series = text_series.str.replace(pat,'')
+    # Removing ponctuation from text
+    text_series = text_series.str.replace(r'\s+',' ')
+    # Normalizing to NFDK, if have words with special characteres
+    text_series = text_series.str.normalize('NFKD')
+    text_series = text_series.str.replace('[^\w\s]','')
+    # Removing numeric substrings from text
+    text_series = text_series.str.replace(' \d+','')
+```
