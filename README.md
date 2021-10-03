@@ -202,7 +202,41 @@ def get_df_features(df, text_col, class_col, class_value, ngram=(1,1)):
 ## 6 - Chi²
 #### Resuming Chi² analyze the dependency between two features, the higher value, the higher dependency[REF]. In this way we can use each word of our corpus as a distinct feature and verify how diferent it are from our target. thus obtaining the correlation of each word in relation to our Sentiment values.
 
-#### As the Chi² calculation is performed only in a binary way, analyzing the hypotesis of the feature being or not related to the target variable, we need to do calculos with binary classes. So we will do 2 classification variations, one for each diferent class. Being Negative and not negative, and Being Positive and not Positive.
+#### As the Chi² calculation is performed only in a binary way, analyzing the hypotesis of the feature being or not related to the target variable, we need to do calculos with binary classes. So we will do 2 classification variations, one for each different class. Being Negative and not negative, and Being Positive and not Positive.
+
+#### Than we will use the code above to obtain Chi² values.
+
+```python
+from sklearn.feature_selection import chi2
+
+def get_top_chi2(X,y,feature_names, n):
+    '''
+    Function to receive X with columns and y as target 
+    and return the n best features according with chi2
+    X: pandas Dataframe with
+    y: pandas series with 1 in index that be analysed and 0 for another ones
+    return: list of n tuples with features name and chi2 value, ordered by chi2 value
+    '''
+    # Getting chi2 score
+    chi2score = chi2(X, y)[0]
+    # Join feature names and chi2 results
+    wscores = zip(feature_names, chi2score, range(0,len(feature_names)))
+    # Sorting results
+    wchi2 = sorted(wscores, key=lambda x:x[1])
+    # Select only the n best values
+    topchi2 = wchi2[::-1][:n]
+    
+    return topchi2
+```
+    
+#### Now we can do this to each Class and plot our main Chi2 features for each one. In this way we get these two graphs below.
+
+
+![alt text](https://github.com/gersonUrban/find_best_words_with_chi2/blob/master/images/top_negative_tokens_from_chi2.png)
+
+![alt text](https://github.com/gersonUrban/find_best_words_with_chi2/blob/master/images/top_positive_tokens_from_chi2.png)
+
+
 Como o calculo de chi2 é realizado apenas de forma binária, analisando a hipótese da feature ser ou não relacionada àquela vairavel target, precisamos realizar os calculos com classes binárias, portanto faremos 5 variações de classificação uma para cada classe diferente.
 
 
