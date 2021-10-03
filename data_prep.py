@@ -1,15 +1,4 @@
-import pandas as pd
-import nltk
-from nltk.stem import WordNetLemmatizer
-from nltk.tokenize import RegexpTokenizer
 from nltk.corpus import stopwords
-from sklearn.feature_extraction.text import TfidfVectorizer
-
-
-stop_words = stopwords.words('english')
-
-
-
 
 def basic_preprocess_text(text_series, language='english'):
     '''
@@ -31,4 +20,5 @@ def basic_preprocess_text(text_series, language='english'):
     text_series = text_series.str.replace('[^\w\s]','')
     # Removing numeric substrings from text
     text_series = text_series.str.replace(' \d+','')
+    
     return text_series

@@ -63,9 +63,10 @@ df['Sentiment'] = df['Sentiment']//4
 
 ## 3 - Text Preprocessing
 
-#### In order to focus on data analisys, our text preprocessing is very simple. First we merely transform text to lower case, remove stopwords, ponctuations, numbers and change encoding type to NFDK in order to remove possible special ponctuation characteres(such as 'ç') in our text. Besisdes, we also remove texts with less than 2 characteres and reset our data index.
+#### In order to focus on data analisys, our text preprocessing is very simple. First we merely transform text to lower case, remove stopwords, ponctuations, numbers and change encoding type to NFDK in order to remove possible special ponctuation characteres(such as 'ç') in our text.
 
 ```python
+from nltk.corpus import stopwords
 
 def basic_preprocess_text(text_series, language='english'):
     '''
@@ -87,14 +88,24 @@ def basic_preprocess_text(text_series, language='english'):
     text_series = text_series.str.replace('[^\w\s]','')
     # Removing numeric substrings from text
     text_series = text_series.str.replace(' \d+','')
-    # Removing Duplicates
-    df = df.drop_duplicates(subset=[TEXT_COL])
-    # Removing texts with less than 2 characteres
-    df = df[df['Phrase'].str.len()>2].reset_index(drop=True)
-    # Reseting Index
-    df.reset_index(drop=True,inplace=True)
     
     return text_series
+```
+
+#### Finally we make text process, remove texts with less than 2 characteres and reset our data index.
+
+```python
+from data_prep import basic_preprocess_text
+
+# Basic Text Processing
+df[TEXT_COL] = basic_preprocess_text(df[TEXT_COL], language='english')
+
+# Removing Duplicates
+df = df.drop_duplicates(subset=[TEXT_COL])
+# Removing texts with less than 2 characteres
+df = df[df['Phrase'].str.len()>2].reset_index(drop=True)
+# Reseting Index
+df.reset_index(drop=True,inplace=True)
 ```
 
 #### In this step we can add other text treatments, such as lemmatization, add other stop words related to our domain, like **"films"** and **"movies"**, but as before we cherish the basics.
