@@ -233,10 +233,9 @@ def get_top_chi2(X,y,feature_names, n):
 
 ![alt text](https://github.com/gersonUrban/find_best_words_with_chi2/blob/master/images/top_negative_x_top_positive_tokens_chi2.png)
 
-![alt text](https://github.com/gersonUrban/find_best_words_with_chi2/blob/master/images/top_negative_tokens_from_chi2.png)
+#### We can see that despite the classes being different, the main tokens are similar. To solve this problem we can multiply the values of tfidf with Chi², thus using the correlation of each feature with the class but also the frequency of these terms.
 
-![alt text](https://github.com/gersonUrban/find_best_words_with_chi2/blob/master/images/top_positive_tokens_from_chi2.png)
-
+#### With this we will have a new weight for each word, Chi² vs TF-IDF.
 
 Como o calculo de chi2 é realizado apenas de forma binária, analisando a hipótese da feature ser ou não relacionada àquela vairavel target, precisamos realizar os calculos com classes binárias, portanto faremos 5 variações de classificação uma para cada classe diferente.
 
@@ -247,4 +246,21 @@ Portanto, para contornar este problema podemos analisar a frequencia das palavra
 
 ## 7 Chi² x TF-IDF
 
+
+para obter esse novo valor, nos multiplicamos ambos os valores e reordenamos eles, afim de encontramos os principais pesos
+#### Multiplying this 2 vectors 
+
+
+![alt text](https://github.com/gersonUrban/find_best_words_with_chi2/blob/master/images/comparision_topchi2_and_topchi_x_tfidf_negative.png)
+
+![alt text](https://github.com/gersonUrban/find_best_words_with_chi2/blob/master/images/comparision_topchi2_and_topchi_x_tfidf_positive.png)
+
+
+
+
 ## 8 - Final Results
+
+
+![alt text](https://github.com/gersonUrban/find_best_words_with_chi2/blob/master/images/final_negative_word_cloud.png)
+
+![alt text](https://github.com/gersonUrban/find_best_words_with_chi2/blob/master/images/final_positive_word_cloud.png)
