@@ -113,7 +113,6 @@ df.reset_index(drop=True,inplace=True)
 ## 4 - Basic Word Cloud
 #### Done the basic text preproccess we can begin our text analysis. In order to compare our results and demonstrate a simpler data analysis, let's plot a word cloud from each class of our current text data.
 
-#### First, we define our plot function and than plot it.
 
 ```python
 from wordcloud import WordCloud
