@@ -33,51 +33,34 @@
 | 4 | Positive |
 
 ## 2 - DataBase Preprocessing
-#### We separate our preprocessing in two steps, in very first we need change our Data structure to our applicationand analysis.
+#### We separate our preprocessing in two steps, in very first we need change our Data structure to our application and analysis.
 #### After read data, we decide remove all intermediate Sentiments in order to improve the separability between **Negative** and **Positive** Sentiments, and in facilitate viewing of the most signficant words.
 
 ```python
 import pandas as pd
 import numpy as np
+
 ########## Initing Constants and Variables ##########
 TEXT_COL = 'Phrase'
 AUX_CLASS_COL = 'new_sent'
 class_col = 'Sentiment'
+
+
 ########## Reading Data ##########
 df = pd.read_csv('sentiment-analysis-on-movie-reviews/train.tsv',sep='\t')
-# Removing 'neutral' Analysis to improve separability in Negative and Positive Class
+
+# Removing 'neutral' Analysis to improve separability in Negative and Positive Classes
 df = df[df[class_col] != 2]
 df = df[df[class_col] != 1]
 df = df[df[class_col] != 3]
 ```
 
-#### After that we group all Phrases by SentenceId, joining all Phrases from a reviewer. We do that because there are a lot of short Phrases, with less than 100 characters.
+#### Finally we divide class by for, in order to obtain only 0 and 1 values
 ```python
-# Grouping by SentenceId and transforming data as a list
-df2 = df.groupby('SentenceId').agg(lambda x: x.tolist())
-# Getting review sentiment mean 
-df2['sent_mean'] = df2[class_col].apply(lambda x: np.array(x).mean())
+# Doing Sentment Became only 0 and 1 values
+df['Sentiment'] = df['Sentiment']//4
 ```
-
-#### Posterioly we get the mean of each review and create a new classification column, with 1 if sentmente mean was > 2 and 0 otherwise.
-```python
-# Transform sentiment values to only positive and negative values
-# Setting all instaces as negative (0)
-df2[AUX_CLASS_COL] = 0 
-# Setting only most than 2 class as 1 (positive)
-df2.loc[df2['sent_mean'] > 2,AUX_CLASS_COL] = 1
-```
-#### Finaly we join all Phrases, reset index and change our class name variable.
-```python
-# Join text from the text list created in groupby agg
-df2[TEXT_COL] = df2[TEXT_COL].apply(lambda x: ' '.join(x))
-# Reset index
-df2.reset_index(drop=True, inplace=True)
-# Redefining df DataFrame
-df = df2.copy()
-# Changing class_col name
-class_col = AUX_CLASS_COL
-```
+#### We can make do another data transformations, group all Phrases from the same review, use a sentment mean to analyse, but for now, that's enough.
 
 ## 3 - Text Preprocessing
 
