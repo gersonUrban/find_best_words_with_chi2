@@ -97,6 +97,8 @@ def basic_preprocess_text(text_series, language='english'):
     return text_series
 ```
 
+#### In this step we can add other text treatments, such as lemmatization, add other stop words related to our domain, like **"films"** and **"movies"**, but as before we cherish the basics.
+
 ## 4 - Basic Word Cloud
 #### Doind the basic text preproccess we can begin our text analysis. In order to compare our results and demonstrate a simpler data analysis, let's plot a word cloud our current text data.
 
