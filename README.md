@@ -35,6 +35,7 @@
 ## 2 - DataBase Preprocessing
 #### We separate our preprocessing in two steps, in very first we need change our Data structure to our application and analysis.
 #### After read data, we decide remove all intermediate Sentiments in order to improve the separability between **Negative** and **Positive** Sentiments, and in facilitate viewing of the most signficant words.
+#### Finally we divide class by 4, in order to obtain only 0 and 1 values.
 
 ```python
 import pandas as pd
@@ -53,20 +54,26 @@ df = pd.read_csv('sentiment-analysis-on-movie-reviews/train.tsv',sep='\t')
 df = df[df[class_col] != 2]
 df = df[df[class_col] != 1]
 df = df[df[class_col] != 3]
-```
 
-#### Finally we divide class by for, in order to obtain only 0 and 1 values
-```python
 # Doing Sentment Became only 0 and 1 values
 df['Sentiment'] = df['Sentiment']//4
 ```
+
 #### We can make do another data transformations, group all Phrases from the same review, use a sentment mean to analyse, but for now, that's enough.
 
 ## 3 - Text Preprocessing
 
-#### In order to focus on data analisys, our text preprocessing is very simple. First we merely remove stopwords, ponctuations, numbers and change encoding type to NFDK in order to remove possible special ponctuation characteres(such as 'ç').
+#### In order to focus on data analisys, our text preprocessing is very simple. First we merely transform text to lower case, remove stopwords, ponctuations, numbers and change encoding type to NFDK in order to remove possible special ponctuation characteres(such as 'ç') in our text. Besisdes, we also remove texts with less than 2 characteres and reset our data index.
 
 ```python
+
+def basic_preprocess_text(text_series, language='english'):
+    '''
+    Function to make a basic data prep in text, according to sentiment analysis dataset
+    text_series: pandas series with texts to be treated
+    language: string indicating stopwords language to be used
+    return: Pandas Series with treated text
+    '''
     # Passing text to lowercase
     text_series = text_series.str.lower()
     # Defining stopwords to be removed
@@ -80,6 +87,14 @@ df['Sentiment'] = df['Sentiment']//4
     text_series = text_series.str.replace('[^\w\s]','')
     # Removing numeric substrings from text
     text_series = text_series.str.replace(' \d+','')
+    # Removing Duplicates
+    df = df.drop_duplicates(subset=[TEXT_COL])
+    # Removing texts with less than 2 characteres
+    df = df[df['Phrase'].str.len()>2].reset_index(drop=True)
+    # Reseting Index
+    df.reset_index(drop=True,inplace=True)
+    
+    return text_series
 ```
 
 ## 4 - Basic Word Cloud
