@@ -7,14 +7,14 @@
 #### Therefore, if we want analyze witch words have a bigger relevance to each categoty, in order to get these keywords to check if there is words that must be removed or to understand how our model is working, we should understanding our data and find the most important features to each class. 
 
 #### So we will discuss some points related to this problematic and later a posible solution to this case, in this way we will talk about:
-1 - DataBase used in this case
-2 - DataBase Preprocessing
-3 - Text Preprocessing
-4 - Basic Word Cloud
-5 - TF-IDF
-6 - Chi²
-7 - Chi² x TF-IDF
-8 - Final Results
+1. - DataBase used in this case
+2. - DataBase Preprocessing
+3. - Text Preprocessing
+4. - Basic Word Cloud
+5. - TF-IDF
+6. - Chi²
+7. - Chi² x TF-IDF
+8. - Final Results
 
 
 ## 1 - DataBase
