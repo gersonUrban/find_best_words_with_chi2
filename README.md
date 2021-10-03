@@ -111,27 +111,45 @@ df.reset_index(drop=True,inplace=True)
 #### In this step we can add other text treatments, such as lemmatization, add other stop words related to our domain, like **"films"** and **"movies"**, but as before we cherish the basics.
 
 ## 4 - Basic Word Cloud
-#### Doind the basic text preproccess we can begin our text analysis. In order to compare our results and demonstrate a simpler data analysis, let's plot a word cloud our current text data.
+#### Done the basic text preproccess we can begin our text analysis. In order to compare our results and demonstrate a simpler data analysis, let's plot a word cloud from each class of our current text data.
+
+#### First, we define our plot function and than plot it.
 
 ```python
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
-# Show one word cloud to each Sentiment
-d = {}
-plt.figure(1,figsize=(20, 20))
-n_classes = range(0, len(df[CLASS_COL].value_counts().index))
-for i in n_classes:
-    print("Doing {} graph".format(i))
-    d[i] = df[df[CLASS_COL]==i]
-    words = ' '.join(d[i][TEXT_COL])
-    split_word = " ".join([word for word in words.split()])
-    wordcloud = WordCloud(background_color='black',width=3000,height=2500).generate(split_word)
-    plt.subplot(320+(i+1))
-    plt.imshow(wordcloud)
-    plt.title('Sentiment {}'.format(i))
-    plt.axis('off')
-plt.show()
+
+def plot_word_cloud(df, text_col, class_col):
+    '''
+    plot a basic word cloud to each class of DataFrame
+    df: Pandas DataFrame with text column and text class column
+    text_col: string with text column name
+    class_col: string with class column name
+    '''
+    
+    # Initializing Figure to plot
+    plt.figure(1,figsize=(20, 20))
+    # Getting a sorted vector from class values
+    n_classes = sorted(df[class_col].unique())
+    # create dict to get all values
+    for i, c in enumerate(n_classes):
+        print("Doing {} graph".format(c))
+        # Getting all words from class c
+        words = ' '.join(df[df[class_col]==c][text_col].values)
+        # Generating WordCloud
+        wordcloud = WordCloud(background_color='black',width=3000,height=2500).generate(words)
+        # Plotting WordCloud
+        plt.subplot(320+(i+1))
+        plt.imshow(wordcloud)
+        plt.title('Sentiment {}'.format(c))
+        plt.axis('off')
+    plt.show()
 ```
+```python
+from plot_word_cloud import plot_word_cloud
+plot_word_cloud(df, TEXT_COL, class_col)
+```
+
 
 ![alt text](https://github.com/gersonUrban/find_best_words_with_chi2/blob/master/images/basicWordCloud.png)
 
