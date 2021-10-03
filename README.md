@@ -7,13 +7,14 @@
 #### Therefore, if we want analyze witch words have a bigger relevance to each categoty, in order to get these keywords to check if there is words that must be removed or to understand how our model is working, we should understanding our data and find the most important features to each class. 
 
 #### So we will discuss some points related to this problematic and later a posible solution to this case, in this way we will talk about:
- 1 - DataBase used in this case
- 2 - DataBase Preprocessing
- 3 - Text Preprocessing
- 4 - Basic Word Cloud
- 5 - TFIDF
- 6 - Chi²
- 7 - Final Results
+1 - DataBase used in this case
+2 - DataBase Preprocessing
+3 - Text Preprocessing
+4 - Basic Word Cloud
+5 - TF-IDF
+6 - Chi²
+7 - Chi² x TF-IDF
+8 - Final Results
 
 
 ## 1 - DataBase
@@ -155,22 +156,26 @@ plot_word_cloud(df, TEXT_COL, class_col)
 #### We can view that the words do not represent very well the differences between Positive and Negative Sentiments. It occurs because we get only frequency of words to each Sentiment and plot it, giving importance only to the frequency of words in each class.
 #### To improve it we can find the most relevante features according to each class, analyzing correlation between our features(words) and classes.
 
-## 5 - TFIDF
+## 5 - TF-IDF
 #### To make possible the Chi² analysis we need transform our text data in a vector of features where each feature is a ngram. When we have a 1gram(n=1), than each feature is a different word.
 #### There are some ways to vectorize our text, we can do a simple bag of words, were we only count how many times each word/feature appear in a document. In this way, we can found statistics of each word in each document and consequently in each class. A better approach is use TFIDF [REF]. 
-#### TFIDF calculate **Term Frequency** to check 'how many times' word appears, and **Inverse Document Frequency** in order to penalize words that appear in too many documents. In this way is possible to find the importance of each term.
+#### TFIDF calculate **Term Frequency** to check how many times word appears, and **Inverse Document Frequency** in order to penalize words that appear in too many documents. In this way is possible to find the importance of each term.
 
 #### To summarize we will only apply this technique, if you want to delve in this topic you can read the references.
 
 #### Because TFIDF calculates the most important features to a corpus, we will calculate it 2 times, one for each Sentiment variation, in order to get the statistical difference words in those Classes.
 
 #### Than we create a DataFrame only with desired Sentiment Reviews, create a TFIDF weights model and transform all data with these weights. Finally getting the vectors, containg weights and the feature_names containing all ngrams(words) of our vector.
+
+#### The script to get this results can be seen bellow.
 ```python
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 def get_df_features(df, text_col, class_col, class_value, ngram=(1,1)):
     '''
-    This Function receive pandas DataFrame with texts and its classification, the both columns and a ngram tuple. Returning a pandas DataFrame with all words ant it tfidf values
+    This Function receive pandas DataFrame with texts and its classification, 
+    the both columns and a ngram tuple. 
+    Returning a pandas DataFrame with all words ant it tfidf values
     df: pandas DataFrame
     text_col: string with the name of column with texts
     CLASS_COL: string with the name of column with classifications
@@ -188,8 +193,6 @@ def get_df_features(df, text_col, class_col, class_value, ngram=(1,1)):
     vectors = vectorizer.transform(df[text_col])
     # Getting feature names (words)
     feature_names = vectorizer.get_feature_names()
-    # Getting idf wright from each ngram
-    # weights = vectorizer.idf_
     
     return vectors, feature_names
    
@@ -199,8 +202,7 @@ def get_df_features(df, text_col, class_col, class_value, ngram=(1,1)):
 ## 6 - Chi²
 #### Resuming Chi² analyze the dependency between two features, the higher value, the higher dependency[REF]. In this way we can use each word of our corpus as a distinct feature and verify how diferent it are from our target. thus obtaining the correlation of each word in relation to our Sentiment values.
 
-
-#### As the Chi² calculation is performed only in a binary way, analyzing the hypotesis of the feature being or not related to the target variable, we need to do calculos with binary classes. So we will do 2 classification variations, one for each diferent class. Being Negative and not negative, and Being Positive and not Positive. 
+#### As the Chi² calculation is performed only in a binary way, analyzing the hypotesis of the feature being or not related to the target variable, we need to do calculos with binary classes. So we will do 2 classification variations, one for each diferent class. Being Negative and not negative, and Being Positive and not Positive.
 Como o calculo de chi2 é realizado apenas de forma binária, analisando a hipótese da feature ser ou não relacionada àquela vairavel target, precisamos realizar os calculos com classes binárias, portanto faremos 5 variações de classificação uma para cada classe diferente.
 
 
@@ -208,4 +210,6 @@ Uma vez encontradas as melhores features com chi2, podemos utiliza-las para gera
 Entretanto como pode ser visualizado nos resultados obtidos, as palavras mais relevantes não são tão relacionadas a nossa classe desejada, isto porque palavras que tem baixa ocorrencia mas aparecem apenas quando a classe é desejada, se sobressaem em relação a palavras com alta ocorrencia mas que tem uma variação maior entre as classes analisadas.
 Portanto, para contornar este problema podemos analisar a frequencia das palavras de forma a penalizar palavras com baixa ocorrencia em nossos documentos, desta forma obtemos um ajuste melhor dos resultados encontrados com o chi2. Podemos utilzar outros tipos de analise de frequencia como TFIDF, porém a fim de simplificar, utilizaremos apenas a frenquencia da feature em relação a todos os documentos.
 
-## 7 - Final Results
+## 7 Chi² x TF-IDF
+
+## 8 - Final Results
