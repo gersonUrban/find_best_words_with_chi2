@@ -231,6 +231,7 @@ def get_top_chi2(X,y,feature_names, n):
     
 #### Now we can do this to each Class and plot our main Chi2 features for each one. In this way we get these two graphs below.
 
+![alt text](https://github.com/gersonUrban/find_best_words_with_chi2/blob/master/images/top_negative_x_top_positive_tokens_chi2.png)
 
 ![alt text](https://github.com/gersonUrban/find_best_words_with_chi2/blob/master/images/top_negative_tokens_from_chi2.png)
 
