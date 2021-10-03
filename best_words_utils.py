@@ -22,7 +22,7 @@ def get_main_words_pipeline(df,
     '''
     target_col='target',
     # Training tfidf model with ngrams and selexted df, and getting transformed features with tfidf
-    X, feat_names, weights = get_df_features(df, text_col, class_col,sentiment,ngram=ngram)
+    X, feat_names = get_df_features(df, text_col, class_col,sentiment,ngram=ngram)
 
     # Creating a col with 0 in target
     df[target_col] = 0

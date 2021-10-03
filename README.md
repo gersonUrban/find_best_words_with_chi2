@@ -108,7 +108,7 @@ df = df[df['Phrase'].str.len()>2].reset_index(drop=True)
 df.reset_index(drop=True,inplace=True)
 ```
 
-#### In this step we can add other text treatments, such as lemmatization, add other stop words related to our domain, like **"films"** and **"movies"**, but as before we cherish the basics.
+#### In this step we can add other text treatments, such as lemmatization, add other stop words related to our domain, like **"films"** and **"movies"**, we could also treat better negative sentences as "not funny" but as before we cherish the basics.
 
 ## 4 - Basic Word Cloud
 #### Done the basic text preproccess we can begin our text analysis. In order to compare our results and demonstrate a simpler data analysis, let's plot a word cloud from each class of our current text data.
@@ -166,19 +166,33 @@ plot_word_cloud(df, TEXT_COL, class_col)
 
 #### Than we create a DataFrame only with desired Sentiment Reviews, create a TFIDF weights model and transform all data with these weights. Finally getting the vectors, containg weights and the feature_names containing all ngrams(words) of our vector.
 ```python
-    import numpy as np
-    from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+def get_df_features(df, text_col, class_col, class_value, ngram=(1,1)):
+    '''
+    This Function receive pandas DataFrame with texts and its classification, the both columns and a ngram tuple. Returning a pandas DataFrame with all words ant it tfidf values
+    df: pandas DataFrame
+    text_col: string with the name of column with texts
+    CLASS_COL: string with the name of column with classifications
+    CLASS_VALUE: the class value to trained the model
+    ngram: tuple containing tuple with lenth of ngram
+    return: numpy array with all tfidf values, array with ngrams (words)
+    '''
     # Getting text only from wanted class
-    df_aux = df[df[CLASS_COL] == CLASS_VALUE]
-    # Getting tfidf model
+    df_aux = df[df[class_col] == class_value]
     # Create tfidf vectorizer object
     vectorizer = TfidfVectorizer(ngram_range=ngram)
     # Fitting tfidf weights to text
-    vec = vectorizer.fit(df_aux[TEXT_COL])
+    vectorizer = vectorizer.fit(df_aux[text_col])
     # Transforming all data using tfdif model
-    vectors = vec.transform(df[TEXT_COL])
+    vectors = vectorizer.transform(df[text_col])
     # Getting feature names (words)
-    feature_names = vec.get_feature_names()
+    feature_names = vectorizer.get_feature_names()
+    # Getting idf wright from each ngram
+    # weights = vectorizer.idf_
+    
+    return vectors, feature_names
+   
 ```
 #### Now we have each word weight to each sentence in our corpus, and than we can find the Chi², using this values and comparing with our targets.
 

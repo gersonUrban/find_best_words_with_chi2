@@ -1,49 +1,35 @@
 ### Creating Vectorizer
-
-import pandas as pd
-from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
-import numpy as np
 
-
-def get_vectorizer_tfidf(text_series,ngram=(1,1)):
+def get_df_features(df, text_col, class_col, class_value, ngram=(1,1)):
     '''
-    This Function receive pandas series with texts and a ngram tuple. Return a trained tfidf model
-    text_series: pandas series with strigs
-    ngram: tuple containing range of ngram to be used
-    return: Vectorizer tfidf model
+    This Function receive pandas DataFrame with texts and its classification, the both columns and a ngram tuple. Returning a pandas DataFrame with all words ant it tfidf values
+    df: pandas DataFrame
+    text_col: string with the name of column with texts
+    CLASS_COL: string with the name of column with classifications
+    CLASS_VALUE: the class value to trained the model
+    ngram: tuple containing tuple with lenth of ngram
+    return: numpy array with all tfidf values, array with ngrams (words)
     '''
+    # Getting text only from wanted class
+    df_aux = df[df[class_col] == class_value]
     # Create tfidf vectorizer object
     vectorizer = TfidfVectorizer(ngram_range=ngram)
     # Fitting tfidf weights to text
-    vectorizer = vectorizer.fit(text_series)
-    return vectorizer
-
-def get_df_features(df, TEXT_COL, CLASS_COL,CLASS_VALUE,ngram=(1,1)):
-    '''
-    This Function receive pandas DataFrame  with texts and its classification, the both columns and a ngram tuple. Returning a pandas DataFrame with all words ant it tfidf values
-    df: pandas DataFrame
-    TEXT_COL: string with the name of column with texts
-    CLASS_COL: string with the name of column with classifications
-    CLASS_VALUE: the class value to trained the model
-    ngram: tuple containing lenth of ngram
-    return: numpy array with all tfidf values and numpy array with all ngrams (words)
-    '''
-    # Getting text only from wanted class
-    df_aux = df[df[CLASS_COL] == CLASS_VALUE]
-    # Getting tfidf model
-    vec = get_vectorizer_tfidf(df_aux[TEXT_COL],ngram=ngram)
+    vectorizer = vectorizer.fit(df_aux[text_col])
     # Transforming all data using tfdif model
-    vectors = vec.transform(df[TEXT_COL])
+    vectors = vectorizer.transform(df[text_col])
     # Getting feature names (words)
-    feature_names = vec.get_feature_names()
+    feature_names = vectorizer.get_feature_names()
     # Getting idf wright from each ngram
-    idf = vec.idf_
-    weights = zip(feature_names, idf)
+    # weights = vectorizer.idf_
     
-    return vectors, feature_names, weights
+    return vectors, feature_names
    
 
+from sklearn.feature_extraction.text import CountVectorizer
+import numpy as np
+import pandas as pd
 def get_vectorizer_df(text_col_series):
     '''
     This function receivs a pandas series with texts, transform that in a count vector of words,
