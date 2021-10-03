@@ -1,39 +1,25 @@
 # Find most relevant words for each class using Chi² and TFIDF
 
-### Suposing we want analyse which words is most importante accoding to each class. Which analysis we could do and how visualize this words?
+#### Suposing we want analyse which words is most importante accoding to each class. Which analysis we could do and how visualize this words?
 
-Supondo que quero analisar quais as palavras mais importantes de acordo com cada classe dos meus dados, quais analises devo fazer e como posso visualizar essas palavras?
+#### We can do a word cloud from our text, but when we do that, the bigger words in our cloud(the most important words) not necessarily are the most important words to us and our classes. In general are the most repeated words.
 
-### We can do a word cloud from our text, but when we do that, the bigger words in our cloud(the most important words) not necessarily are the most important words to us and our classes. In general are the most repeated words.
-Quando fazemos uma nuvem de palavras clássica as palavras com maior relevancia não são necessariamente as mais representativas para aquela categoria específica. Em geral são as palavras que mais aparecem que acabam tendo um tamanho maior em nossa nuvem.
+#### Therefore, if we want analyze witch words have a bigger relevance to each categoty, in order to get these keywords to check if there is words that must be removed or to understand how our model is working, we should understanding our data and find the most important features to each class. 
 
-### Therefore, if we want analyze witch words have a bigger relevance to each categoty, in order to get these keywords to check if there is words that must be removed or to understand how our model is working, we should understanding our data and find the most important features to each class. 
-Portanto, se quisermos fazer uma análise de quais palavras tem maior importancia para cada categoria, a fim de obter essas palavras chaves, ou entender como um possivel modelo de similaridade de textos ou classificação pode funcionar, devemos entender a fundo quais os termos mais relevantes para nossa modelagem, possibilitando também melhorar o préprocessamento de texto realizado inicialmente.
-
-### So we will discuss some points related to this problematic and later a posible solution to this case, in this way we will talk about:
+#### So we will discuss some points related to this problematic and later a posible solution to this case, in this way we will talk about:
  1 - DataBase used in this case
  2 - DataBase Preprocessing
  3 - Text Preprocessing
  4 - Basic Word Cloud
- 5 - Chi²
- 6 - TFIDF
+ 5 - TFIDF
+ 6 - Chi²
  7 - Final Results
- 
-Contudo discutiremos alguns pontos para introduzir e levantar a problemática e posteriormente uma possivel solução para o caso, desta forma falaremos sobre:
-1 - Base de dados
-2 - pre processamento (basico)
-3 - nuvem de palavras (basico)
-4 - Chi2
-5 - TFIDF
-6 - analise dos dados
-7 - nuvem de palavras final
-
 
 
 ## 1 - DataBase
 
 #### To do our analysis we will use the **"Sentiment Analysis on Movie Reviews"**, available in https://www.kaggle.com/c/sentiment-analysis-on-movie-reviews/.
-Para realizar esta análise vamos utilizar a base "Sentiment Analysis on Movie Reviews" disponivel em https://www.kaggle.com/c/sentiment-analysis-on-movie-reviews/.
+
 #### This DataBase contains 3 main columns.
  1 - SentenceId: Indicating what review does that Phrase belong. (A review can have more than one Phrase);
  2 - Phrase: containing each frase of each review;
@@ -45,13 +31,6 @@ Para realizar esta análise vamos utilizar a base "Sentiment Analysis on Movie R
 | 2 | Neutral |
 | 3 | Somewhat Positive |
 | 4 | Positive |
- 
-Esta base contém 3 colunas principais, sendo a SentenceId, que indica a qual review aquela frase pertence, Phrase contendo cada frase de cada review( cada review pode ter mais de uma Phrase) e Sentiment que indica o sentimento contido na frase sendo:
-
-0 - negative; 1 - somewhat negative; 2 - neutral; 3 - somewhat positive; 4 - positive
-
-
-
 
 ## 2 - DataBase Preprocessing
 #### We separate our preprocessing in two steps, in very first we need change our Data structure to our applicationand analysis.
@@ -145,9 +124,6 @@ plt.show()
 
 ![alt text](https://github.com/gersonUrban/find_best_words_with_chi2/blob/master/images/basicWordCloud.png)
 
-Como pode ser visualizado, a nuvem de palavras não corresponde a uma boa representação de cada tipo de review de filme(cada classe diferente).
-Portanto podemos mudar nossa abordagem e em vez de utilizar apenas as palavras de acordo com sua frequencia, podemos utilizar as palavras de acordo com sua relevancia para cada classe específica.
-
 #### We can view that the words do not represent very well the differences between Positive and Negative Sentiments. It occurs because we get only frequency of words to each Sentiment and plot it, giving importance only to the frequency of words in each class.
 #### To improve it we can find the most relevante features according to each class, analyzing correlation between our features(words) and classes.
 
@@ -180,7 +156,8 @@ Portanto podemos mudar nossa abordagem e em vez de utilizar apenas as palavras d
 
 ## 6 - Chi²
 #### Resuming Chi² analyze the dependency between two features, the higher value, the higher dependency[REF]. In this way we can use each word of our corpus as a distinct feature and verify how diferent it are from our target. thus obtaining the correlation of each word in relation to our Sentiment values.
-De forma bem resumida o chi2 analisa a dependencia entre duas features, quanto maior o valor de chi2 maior a dependecia entre as features, desta forma podemos utilizar cada palavra de nosso texto como uma feature distinta e analisar o quão independente elas são de nossa variavel target, obtendo assim a correlação de cada palavra em relação a nossos valores de sentimentos.
+
+
 #### As the Chi² calculation is performed only in a binary way, analyzing the hypotesis of the feature being or not related to the target variable, we need to do calculos with binary classes. So we will do 2 classification variations, one for each diferent class. Being Negative and not negative, and Being Positive and not Positive. 
 Como o calculo de chi2 é realizado apenas de forma binária, analisando a hipótese da feature ser ou não relacionada àquela vairavel target, precisamos realizar os calculos com classes binárias, portanto faremos 5 variações de classificação uma para cada classe diferente.
 

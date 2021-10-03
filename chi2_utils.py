@@ -2,7 +2,6 @@
 
 import numpy as np
 from sklearn.feature_selection import chi2
-import matplotlib.pyplot as plt
 
 def get_top_chi2(X,y,feature_names, n):
     '''
@@ -63,42 +62,3 @@ def get_chi2_x_doc_freq(topchi2, doc_freq,n=40):
     
     return result_chi2_freq
 
-def plot_main_features(result_chi2_freq):
-    '''
-    Function to create a most important features barplot
-    result_chi2_freq: tuple returned by get_main_words_pipeline
-    '''
-    y_pos = range(0,len(result_chi2_freq))
-    plt.figure(figsize=(8,7))
-    chi_values_final = [round(float(i),2) for i in list(np.array(result_chi2_freq)[:,1])]
-
-    plt.bar(y_pos, chi_values_final, align='center', alpha=0.5)
-    plt.xticks(y_pos, np.array(result_chi2_freq)[:,0],rotation='vertical')
-    plt.plot(y_pos, chi_values_final, '-o', markersize=5,alpha=0.8)
-    plt.ylabel('Chi2 * Freq')
-    plt.xlabel('Top Tokens')
-    plt.title('Top Tokens')
-    plt.show()
-
-    
-def get_new_string(result_chi2_freq):
-    '''
-    Function to create a string with main words used to plot a word cloud graph
-    result_chi2_freq: list of tuple containing feature name (word) and importance
-    return: String containing words repeatedly according to word importance
-    '''
-    # Getting a multiplier coeficient to apply in words weights
-    min_value = 1/result_chi2_freq[len(result_chi2_freq)-1][1]
-    # Getting values
-    res_chi = np.array(result_chi2_freq)[:,1]
-    # Multiplying with coefficient
-    res_chi = np.ceil(res_chi.astype(float) * min_value)
-    # Change to int
-    res_chi = res_chi.astype(int)
-    # Creating a string reapeting each word n times, according to it importance
-    s = ""
-    for i, word in enumerate(np.array(result_chi2_freq)[:,0]):
-        for j in range(0,res_chi[i]):
-            s+= word + ' '
-
-    return s

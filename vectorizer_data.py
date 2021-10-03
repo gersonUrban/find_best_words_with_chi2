@@ -37,8 +37,11 @@ def get_df_features(df, TEXT_COL, CLASS_COL,CLASS_VALUE,ngram=(1,1)):
     vectors = vec.transform(df[TEXT_COL])
     # Getting feature names (words)
     feature_names = vec.get_feature_names()
+    # Getting idf wright from each ngram
+    idf = vec.idf_
+    weights = zip(feature_names, idf)
     
-    return vectors, feature_names
+    return vectors, feature_names, weights
    
 
 def get_vectorizer_df(text_col_series):

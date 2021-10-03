@@ -1,8 +1,7 @@
 
 import numpy as np
 from vectorizer_data import get_df_features
-from chi2_utils import get_top_chi2, get_doc_freq, get_chi2_x_doc_freq, plot_main_features, get_new_string
-from plot_word_cloud import plot_finish_word_cloud
+from chi2_utils import get_top_chi2, get_doc_freq, get_chi2_x_doc_freq
 
 def get_main_words_pipeline(df, 
                             text_col, 
@@ -23,7 +22,7 @@ def get_main_words_pipeline(df,
     '''
     target_col='target',
     # Training tfidf model with ngrams and selexted df, and getting transformed features with tfidf
-    X, feat_names = get_df_features(df, text_col, class_col,sentiment,ngram=ngram)
+    X, feat_names, weights = get_df_features(df, text_col, class_col,sentiment,ngram=ngram)
 
     # Creating a col with 0 in target
     df[target_col] = 0
@@ -52,15 +51,5 @@ def get_main_words_pipeline(df,
     # Getting top chi2 features
     result_chi2_freq = get_chi2_x_doc_freq(topchi2, list(np.array(doc_freq)[0]),n=max_words)
     
-    return result_chi2_freq
+    return topchi2, result_chi2_freq
 
-
-def plot_results(result_chi2_freq):
-    '''
-    Function to plot Analysis results
-    result_chi2_freq: tuple returned by get_main_words_pipeline
-    '''
-    # Plotting data to vizualise
-    plot_main_features(result_chi2_freq)
-    s = get_new_string(result_chi2_freq)
-    plot_finish_word_cloud(s)
